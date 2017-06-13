@@ -19,7 +19,7 @@ public class Solution {
             sol.addEdge(new Edge(x, y, r));
         }
 
-        System.out.println(sol.getMinWeight());
+        System.out.println(sol.getMinWeight(nNodes));
     }
 
     private List<Edge> edges;
@@ -32,56 +32,49 @@ public class Solution {
         edges.add(edge);
     }
 
-    int getMinWeight() {
+    int getMinWeight(int nNodes) {
         Collections.sort(edges);
-        List<Subtree> subtrees = new ArrayList();
-
-        Subtree first = new Subtree();
-        first.addEdge(edges.get(0));
-        subtrees.add(first);
-
-        System.err.println("init: " + first);
-        edges.remove(0);
+        Subtree result = new Subtree();
+        List<Subtree> subtrees = new ArrayList(nNodes);
+        for (int i = 1; i <= nNodes; i++) {
+            Subtree s = new Subtree();
+            s.addNode(i);
+            subtrees.add(s);
+        }
 
         for (Edge edge : edges) {
+            Subtree u = null;
+            Subtree v = null;
             for (Subtree subtree : subtrees) {
-                if (subtree.containsNode(edge.x) && subtree.containsNode(edge.y)) {
-                    continue;
-                }
-
-                if (!subtree.containsNode(edge.x) && !subtree.containsNode(edge.y)) {
-                    subtree = new Subtree();
-                    subtrees.add(subtree);
-                }
-
-                //System.err.println("add: " + edge + " to: " + subtree);
-                subtree.addEdge(edge);
-                break;
-            }
-            for (int i = 0; i < subtrees.size() - 1; i++) {
-                boolean merged = false;
-                for (int j = i+1; j < subtrees.size(); j++) {
-                    if (!subtrees.get(i).disjoins(subtrees.get(j))) {
-                        //System.err.println("merge: " + subtrees.get(i) + " to: " + subtrees.get(j));
-                        subtrees.get(i).merge(subtrees.get(j));
-                        subtrees.remove(j);
-                        merged = true;
-                        break;
-                    }
-                }
-                if (merged) {
+                if (subtree.containsNode(edge.x)) {
+                    u = subtree;
                     break;
                 }
+            }
+            for (Subtree subtree : subtrees) {
+                if (subtree.containsNode(edge.y)) {
+                    v = subtree;
+                    break;
+                }
+            }
+            if (u != v) {
+                result.addEdge(edge);
+                u.merge(v);
+                subtrees.remove(v);
             }
         }
         //System.err.println("edges: " + edges);
         //System.err.println("subtrees: " + subtrees);
-        return subtrees.get(0).weight;
+        return result.weight;
     }
     
     static class Subtree {
         Set<Integer> nodes = new HashSet();
         int weight = 0;
+
+        void addNode(int n) {
+            nodes.add(n);
+        }
 
         void addEdge(Edge e) {
             nodes.add(e.x);

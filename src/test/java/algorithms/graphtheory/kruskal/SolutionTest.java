@@ -16,7 +16,7 @@ public class SolutionTest {
         sol.addEdge(new Solution.Edge(1, 4, 100));
         sol.addEdge(new Solution.Edge(3, 1, 200));
 
-        assertEquals(200, sol.getMinWeight());
+        assertEquals(200, sol.getMinWeight(4));
     }
 
     @Test
@@ -35,6 +35,6 @@ public class SolutionTest {
             sol.addEdge(new Solution.Edge(x, y, r));
         }
 
-        assertEquals(6359060, sol.getMinWeight());
+        assertEquals(6359060, sol.getMinWeight(nNodes));
     }
 }
