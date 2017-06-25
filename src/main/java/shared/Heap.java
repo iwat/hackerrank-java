@@ -2,7 +2,7 @@ package shared;
 
 import java.util.*;
 
-class Heap<T extends Comparable<T>> {
+public class Heap<T extends Comparable<T>> {
     int multiplier;
     List<T> data = new ArrayList();
 
@@ -10,23 +10,23 @@ class Heap<T extends Comparable<T>> {
         this.multiplier = multiplier;
     }
 
-    void add(T value) {
+    public void add(T value) {
         data.add(value);
         heapifyUp();
     }
 
-    boolean isEmpty() {
+    public boolean isEmpty() {
         return data.size() == 0;
     }
 
-    T peek() {
+    public T peek() {
         if (data.isEmpty()) {
             return null;
         }
         return data.get(0);
     }
 
-    T poll() {
+    public T poll() {
         T head = data.get(0);
         data.set(0, data.get(data.size() - 1));
         data.remove(data.size() - 1);
@@ -34,11 +34,11 @@ class Heap<T extends Comparable<T>> {
         return head;
     }
 
-    int size() {
+    public int size() {
         return data.size();
     }
 
-    void heapifyUp() {
+    private void heapifyUp() {
         int index = data.size() - 1;
         int parent = (index - 1) / 2;
 
@@ -54,7 +54,7 @@ class Heap<T extends Comparable<T>> {
         }
     }
 
-    void heapifyDown() {
+    private void heapifyDown() {
         int index = 0;
 
         while (true) {
